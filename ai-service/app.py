@@ -22,6 +22,14 @@ def scrape_product():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/products', methods=['GET'])
+def get_products():
+    try:
+        data = scraper.get_trending_products()
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/analyze-sentiment', methods=['POST'])
 def analyze_sentiment():
     data = request.json
@@ -38,5 +46,5 @@ def analyze_sentiment():
     })
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 5001))
     app.run(host='0.0.0.0', port=port, debug=True)

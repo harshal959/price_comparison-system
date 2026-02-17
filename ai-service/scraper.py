@@ -8,101 +8,23 @@ from amzpy import AmazonScraper
 # (It might keep a session, so global might be better, but let's instantiate per request for thread safety if needed, or check thread safety)
 # The library uses curl_cffi which usually handles sessions well.
 
-# --- DEMO DATA FOR GUARANTEED RESULTS ---
-DEMO_DATA = {
-    "samsung s24": {
-        "name": "Samsung Galaxy S24 Ultra 5G AI Smartphone (Titanium Gray, 12GB, 256GB Storage)",
-        "image": "https://m.media-amazon.com/images/I/71CXhVhpM0L._SX679_.jpg",
-        "rating": 4.5,
-        "reviews_count": 1250,
-        "price_comparison": [
-            {"store": "Amazon", "price": 129999, "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg", "link": "https://www.amazon.in/s?k=samsung+s24", "rating": 4.5, "image": "https://m.media-amazon.com/images/I/71CXhVhpM0L._SX679_.jpg", "live": True, "best": False},
-            {"store": "Flipkart", "price": 128500, "logo": "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/flipkart-icon.png", "link": "https://www.flipkart.com/search?q=samsung%20s24", "rating": 4.6, "image": "https://rukminim2.flixcart.com/image/850/1000/xif0q/mobile/5/i/7/-original-imagxm79z58jghgt.jpeg", "live": True, "best": True},
-            {"store": "Croma", "price": 129000, "logo": "https://logo.clearbit.com/croma.com", "link": "https://www.croma.com/search/?q=samsung%20s24", "live": False, "best": False},
-            {"store": "Meesho", "price": 132000, "logo": "https://logo.clearbit.com/meesho.com", "link": "https://www.meesho.com/search?q=samsung%20s24", "live": False, "best": False}
-        ],
-        "ai_recommendation": {
-            "store": "Flipkart",
-            "reason": "Best price available for the Titanium Gray variant with bank offers applied.",
-            "score": 9.6
-        },
-        "price_history": {
-             "labels": ["Nov 1", "Nov 15", "Dec 1", "Dec 15", "Jan 1", "Jan 15", "Feb 1"],
-             "datasets": [
-                {"label": "Amazon", "data": [134999, 134000, 133000, 131500, 129999, 129999, 129999], "borderColor": "#FF9900", "backgroundColor": "rgba(255, 153, 0, 0.1)", "tension": 0.4},
-                {"label": "Flipkart", "data": [134999, 132000, 131000, 129000, 128500, 128500, 128500], "borderColor": "#2874F0", "backgroundColor": "rgba(40, 116, 240, 0.1)", "tension": 0.4}
-             ]
-        }
-    },
-    "iphone 15": {
-        "name": "Apple iPhone 15 Pro (128 GB) - Natural Titanium",
-        "image": "https://m.media-amazon.com/images/I/81CgtwSII3L._SX679_.jpg",
-        "rating": 4.6,
-        "reviews_count": 3450,
-        "price_comparison": [
-           {"store": "Amazon", "price": 129900, "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg", "link": "https://amazon.in", "best": False, "live": True},
-           {"store": "Flipkart", "price": 127999, "logo": "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/flipkart-icon.png", "link": "https://flipkart.com", "best": True, "live": True}
-        ],
-        "ai_recommendation": {
-            "store": "Flipkart",
-            "reason": "Lowest price across all verify platforms and fastest delivery option available.",
-            "score": 9.2
-        },
-        "price_history": {
-            "labels": ["Nov 1", "Nov 15", "Dec 1", "Dec 15", "Jan 1", "Jan 15", "Feb 1"],
-            "datasets": [
-                {"label": "Amazon", "data": [134900, 133000, 132500, 131000, 129900, 129900, 129900], "borderColor": "#FF9900", "backgroundColor": "rgba(255, 153, 0, 0.1)", "tension": 0.4},
-                {"label": "Flipkart", "data": [134900, 131000, 129999, 128500, 127999, 127999, 126999], "borderColor": "#2874F0", "backgroundColor": "rgba(40, 116, 240, 0.1)", "tension": 0.4}
-            ]
-        }
-    },
-    "sony headphones": { 
-        "name": "Sony WH-1000XM5 Wireless Noise Cancelling Headphones, 30 Hours Battery Life",
-        "image": "https://m.media-amazon.com/images/I/51SKmu2G9FL._SX679_.jpg",
-        "rating": 4.8,
-        "reviews_count": 8900,
-        "price_comparison": [
-           {"store": "Amazon", "price": 29990, "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg", "link": "https://amazon.in", "best": True, "live": True},
-           {"store": "Flipkart", "price": 31990, "logo": "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/flipkart-icon.png", "link": "https://flipkart.com", "best": False, "live": True}
-        ],
-        "ai_recommendation": {
-            "store": "Amazon",
-            "reason": "Best deal currently available. Price dropped by ₹2000 this week.",
-            "score": 9.8
-        },
-        "price_history": {
-            "labels": ["Nov 1", "Nov 15", "Dec 1", "Dec 15", "Jan 1", "Jan 15", "Feb 1"],
-            "datasets": [
-                {"label": "Amazon", "data": [34990, 32000, 31990, 29990, 29990, 28990, 29990], "borderColor": "#FF9900", "backgroundColor": "rgba(255, 153, 0, 0.1)", "tension": 0.4},
-                {"label": "Flipkart", "data": [34990, 34990, 33500, 31990, 31990, 31990, 31990], "borderColor": "#2874F0", "backgroundColor": "rgba(40, 116, 240, 0.1)", "tension": 0.4}
-            ]
-        }
-    },
-    "macbook air m2": {
-        "name": "Apple MacBook Air Laptop M2 chip: 13.6-inch Liquid Retina Display, 8GB RAM, 256GB SSD Storage",
-        "image": "https://m.media-amazon.com/images/I/71f5Eu5lJSL._SX679_.jpg",
-        "rating": 4.7,
-        "reviews_count": 1400,
-        "price_comparison": [
-           {"store": "Amazon", "price": 99900, "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg", "link": "https://amazon.in", "best": False, "live": True},
-           {"store": "Flipkart", "price": 86990, "logo": "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/flipkart-icon.png", "link": "https://flipkart.com", "best": True, "live": True}
-        ],
-        "ai_recommendation": {
-            "store": "Flipkart",
-            "reason": "Significant discount on Flipkart for the Midnight color variant.",
-            "score": 9.5
-        },
-        "price_history": {
-            "labels": ["Nov 1", "Nov 15", "Dec 1", "Dec 15", "Jan 1", "Jan 15", "Feb 1"],
-            "datasets": [
-                 {"label": "Amazon", "data": [114900, 109900, 105900, 99900, 99900, 99900, 99900], "borderColor": "#FF9900", "backgroundColor": "rgba(255, 153, 0, 0.1)", "tension": 0.4},
-                 {"label": "Flipkart", "data": [114900, 99900, 92900, 89900, 89900, 86990, 86990], "borderColor": "#2874F0", "backgroundColor": "rgba(40, 116, 240, 0.1)", "tension": 0.4}
-            ]
-        }
-    }
-}
+from product_catalog import PRODUCT_CATALOG
+from difflib import SequenceMatcher
+import os
+from ai_review_generator import generate_ai_reviews
 
-from duckduckgo_search import DDGS
+# Load Kaggle Product Index (if available)
+PRODUCT_INDEX = {}
+try:
+    index_path = os.path.join(os.path.dirname(__file__), 'product_index.json')
+    if os.path.exists(index_path):
+        with open(index_path, 'r', encoding='utf-8') as f:
+            PRODUCT_INDEX = json.load(f)
+        print(f"✅ Loaded product index with {len(PRODUCT_INDEX)} unique products")
+    else:
+        print("⚠️  Product index not found. Run 'python load_kaggle_data.py' first.")
+except Exception as e:
+    print(f"⚠️  Could not load product index: {e}")
 
 # Dynamic Image Fetcher
 def fetch_dynamic_image(query):
@@ -200,7 +122,58 @@ def generate_smart_data(query, store):
     }
 
 def scrape_amazon(query):
-    # Smart Mock - Reliability Priority
+    try:
+        print(f"DEBUG: Attempting Real Scraping for Amazon: {query}")
+        with sync_playwright() as p:
+            browser = p.chromium.launch(headless=True)
+            page = browser.new_page()
+            
+            # Go to Amazon India
+            url = f"https://www.amazon.in/s?k={query.replace(' ', '+')}"
+            page.goto(url, timeout=30000)
+            
+            # Wait for results
+            page.wait_for_selector('div[data-component-type="s-search-result"]', timeout=10000)
+            
+            # Extract first item
+            first_result = page.locator('div[data-component-type="s-search-result"]').first
+            
+            # Get Title
+            title_el = first_result.locator('span.a-text-normal')
+            title = title_el.inner_text().strip() if title_el.count() > 0 else query.title()
+            
+            # Get Price
+            price_el = first_result.locator('span.a-price-whole')
+            price_text = price_el.inner_text().replace(',', '').strip() if price_el.count() > 0 else "0"
+            price = int(price_text) if price_text.isdigit() else 0
+            
+            # Get Image
+            img_el = first_result.locator('img.s-image')
+            image_url = img_el.get_attribute('src') if img_el.count() > 0 else ""
+            
+            # Get Link
+            link_el = first_result.locator('a.a-link-normal.s-no-outline')
+            relative_link = link_el.get_attribute('href') if link_el.count() > 0 else ""
+            link = f"https://www.amazon.in{relative_link}" if relative_link else url
+
+            browser.close()
+            
+            print(f"DEBUG: Real Scraping Success: {title} - {price}")
+            
+            if price > 0:
+                data = generate_smart_data(query, "Amazon") # Get base structure
+                data['name'] = title
+                data['price'] = price
+                data['image'] = image_url
+                data['link'] = link
+                data['logo'] = "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg"
+                data['note'] = "Real-Time Data"
+                return data
+
+    except Exception as e:
+        print(f"DEBUG: Real Scraping Failed ({e}). Falling back to Smart Data.")
+    
+    # Fallback to Smart Mock
     print(f"DEBUG: Generating Smart Data for Amazon: {query}")
     data = generate_smart_data(query, "Amazon")
     data["logo"] = "https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg"
@@ -223,25 +196,207 @@ def scrape_meesho(page, query):
     data["logo"] = "https://logo.clearbit.com/meesho.com"
     return data
 
+# ============ SMART PRODUCT MATCHING (Kaggle Dataset) ============
+
+def normalize_query(query):
+    """Normalize search query for better matching"""
+    import re
+    query = query.lower().strip()
+    query = re.sub(r'[^\w\s]', ' ', query)
+    stopwords = ['gb', 'ram', 'storage', 'the', 'a', 'an', 'with', 'for', 'and']
+    words = [w for w in query.split() if w not in stopwords and len(w) > 1]
+    return ' '.join(words)
+
+def calculate_similarity(str1, str2):
+    """Calculate similarity score between two strings"""
+    return SequenceMatcher(None, str1, str2).ratio()
+
+def find_best_match_in_index(query):
+    """Find best matching product across all platforms in the index"""
+    if not PRODUCT_INDEX:
+        return None
+    
+    query_norm = normalize_query(query)
+    best_match_key = None
+    best_score = 0
+    
+    for key in PRODUCT_INDEX.keys():
+        score = calculate_similarity(query_norm, key)
+        if score > best_score and score >= 0.6:  # 60% similarity threshold
+            best_score = score
+            best_match_key = key
+    
+    if best_match_key:
+        print(f"✅ Found match in index: '{best_match_key}' (similarity: {best_score:.2f})")
+        return PRODUCT_INDEX[best_match_key]
+    
+    return None
+
+def build_price_comparison_from_index(matched_products):
+    """Build price comparison array from indexed products"""
+    comparison = []
+    
+    # Platform configurations
+    platform_configs = {
+        'amazon': {
+            'store': 'Amazon',
+            'logo': 'https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg'
+        },
+        'flipkart': {
+            'store': 'Flipkart',
+            'logo': 'https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/flipkart-icon.png'
+        },
+        'croma': {
+            'store': 'Croma',
+            'logo': 'https://logo.clearbit.com/croma.com'
+        },
+        'meesho': {
+            'store': 'Meesho',
+            'logo': 'https://logo.clearbit.com/meesho.com'
+        }
+    }
+    
+    for platform, config in platform_configs.items():
+        if platform in matched_products:
+            product = matched_products[platform]
+            comparison.append({
+                'store': config['store'],
+                'price': product['price'],
+                'logo': config['logo'],
+                'link': '#',
+                'rating': product.get('rating', 4.0),
+                'live': False,  # Dataset data
+                'source': 'Kaggle Dataset',
+                'best': False
+            })
+    
+    # Sort by price and mark best deal
+    comparison.sort(key=lambda x: x['price'])
+    if comparison:
+        comparison[0]['best'] = True
+    
+    return comparison
+
 def scrape_all(query):
     
-    # 1. CHECK DEMO DATA (Priority)
-    q_lower = query.lower()
-    
-    if "samsung" in q_lower and "s24" in q_lower:
-        print("DEBUG: Using DEMO DATA for Samsung S24")
-        return DEMO_DATA["samsung s24"]
-    if "iphone" in q_lower and "15" in q_lower:
-        print("DEBUG: Using DEMO DATA for iPhone 15")
-        return DEMO_DATA["iphone 15"]
-    if "sony" in q_lower and "headphones" in q_lower:
-        print("DEBUG: Using DEMO DATA for Sony Headphones")
-        return DEMO_DATA["sony headphones"]
-    if "macbook" in q_lower and "air" in q_lower:
-        print("DEBUG: Using DEMO DATA for MacBook Air M2")
-        return DEMO_DATA["macbook air m2"]
+    # Helper to generate mock history
+    def generate_history(start_price):
+        history = []
+        current = start_price * 1.05 # Started higher
+        for _ in range(6):
+            current -= random.randint(0, 1000)
+            history.append(int(current))
+        history.append(start_price) # End at current price
+        return history
 
-    # 2. SMART MOCK DATA GENERATION (Replaces unreliable scraping)
+    # 1. CHECK PRE-SAVED CATALOG (Highest Priority - Your handpicked products)
+    q_lower = query.lower().strip()
+    
+    # Direct match or partial match in keys
+    for key, product in PRODUCT_CATALOG.items():
+        if key in q_lower or q_lower in key:
+            print(f"DEBUG: Using PRODUCT_CATALOG data for {query} (Matched {key})")
+            product_copy = product.copy()
+            product_copy['id'] = key.replace(" ", "_")
+            
+            # Generate Price History if missing
+            if 'price_history' not in product_copy:
+                graph_datasets = []
+                for comp in product_copy.get('price_comparison', []):
+                    store_name = comp['store']
+                    color = "#FF9900" if "Amazon" in store_name else "#2874F0" if "Flipkart" in store_name else "#00B5B5"
+                    bg_color = "rgba(255, 153, 0, 0.1)" if "Amazon" in store_name else "rgba(40, 116, 240, 0.1)" if "Flipkart" in store_name else "rgba(0, 181, 181, 0.1)"
+                    
+                    graph_datasets.append({
+                        "label": store_name,
+                        "data": generate_history(comp['price']),
+                        "borderColor": color,
+                        "backgroundColor": bg_color,
+                        "tension": 0.4
+                    })
+                
+                product_copy['price_history'] = {
+                    "labels": ["Nov 1", "Nov 15", "Dec 1", "Dec 15", "Jan 1", "Jan 15", "Feb 1"],
+                    "datasets": graph_datasets
+                }
+            
+            return product_copy
+
+    # 2. CHECK KAGGLE PRODUCT INDEX (20K+ products)
+    matched_products = find_best_match_in_index(query)
+    
+    if matched_products:
+        print(f"DEBUG: Using Kaggle dataset for '{query}'")
+        
+        # Build price comparison from matched platforms
+        price_comparison = build_price_comparison_from_index(matched_products)
+        
+        if price_comparison:
+            # Use first matched product for main details
+            first_platform = list(matched_products.keys())[0]
+            main_product = matched_products[first_platform]
+            
+            # Build graph datasets
+            graph_datasets = []
+            colors = {
+                'Amazon': {'border': '#FF9900', 'bg': 'rgba(255, 153, 0, 0.1)'},
+                'Flipkart': {'border': '#2874F0', 'bg': 'rgba(40, 116, 240, 0.1)'},
+                'Croma': {'border': '#00B5B5', 'bg': 'rgba(0, 181, 181, 0.1)'},
+                'Meesho': {'border': '#F43397', 'bg': 'rgba(244, 51, 151, 0.1)'}
+            }
+            
+            for comp in price_comparison:
+                store = comp['store']
+                graph_datasets.append({
+                    "label": store,
+                    "data": generate_history(comp['price']),
+                    "borderColor": colors.get(store, {}).get('border', '#000'),
+                    "backgroundColor": colors.get(store, {}).get('bg', 'rgba(0,0,0,0.1)'),
+                    "tension": 0.4
+                })
+            
+            # Generate product-specific AI reviews
+            ai_reviews = generate_ai_reviews(
+                product_name=main_product['name'],
+                category=main_product.get('category', 'Electronics'),
+                rating=main_product.get('rating', 4.0),
+                price=price_comparison[0]['price'],
+                platforms=price_comparison
+            )
+            
+            return {
+                "name": main_product['name'],
+                "image": fetch_dynamic_image(query),  # Still use dynamic images
+                "rating": main_product.get('rating', 4.0),
+                "reviews_count": main_product.get('rating_count', 100),
+                "price": price_comparison[0]['price'],
+                "original_price": main_product.get('original_price', int(price_comparison[0]['price'] * 1.15)),
+                "discount": 15,
+                "price_comparison": price_comparison,
+                "price_history": {
+                    "labels": ["Nov 1", "Nov 15", "Dec 1", "Dec 15", "Jan 1", "Jan 15", "Feb 1"],
+                    "datasets": graph_datasets
+                },
+                "ai_recommendation": {
+                    "store": price_comparison[0]['store'],
+                    "reason": f"Best price from verified Kaggle dataset.",
+                    "score": 9.0
+                },
+                "category": main_product.get('category', 'Electronics'),
+                "description": f"{main_product['name']} - Premium quality product available across multiple e-commerce platforms. Real pricing data from Kaggle dataset.",
+                "specifications": [
+                    {"label": "Category", "value": main_product.get('category', 'Electronics')},
+                    {"label": "Price", "value": f"₹{price_comparison[0]['price']:,}"},
+                    {"label": "Original Price", "value": f"₹{main_product.get('original_price', price_comparison[0]['price']):,}"},
+                    {"label": "Rating", "value": f"{main_product.get('rating', 4.0)}/5.0"},
+                    {"label": "Reviews", "value": f"{main_product.get('rating_count', 100):,} customer reviews"},
+                    {"label": "Availability", "value": f"Available on {len(price_comparison)} platform(s)"},
+                    {"label": "Data Source", "value": "Kaggle E-commerce Dataset"}
+                ],
+                "ai_reviews": ai_reviews
+            }
+
+    # 3. FALLBACK: SMART MOCK DATA GENERATION (No match in catalog or index)
     print(f"DEBUG: Generating Smart Mock Data for '{query}'")
     
     # Generate consistent results for multiple stores
@@ -272,17 +427,6 @@ def scrape_all(query):
     best_store = live_results[0]['store'] if live_results else "Amazon"
     
     avg_rating = 4.2 # Mock average
-    
-    # Safe data for graph - Generate consistent graph based on base price
-    # Helper to generate mock history
-    def generate_history(start_price):
-        history = []
-        current = start_price * 1.05 # Started higher
-        for _ in range(6):
-            current -= random.randint(0, 1000)
-            history.append(int(current))
-        history.append(start_price) # End at current price
-        return history
 
     graph_datasets = []
     graph_datasets.append({
@@ -300,9 +444,24 @@ def scrape_all(query):
         "backgroundColor": "rgba(40, 116, 240, 0.1)",
         "tension": 0.4
     })
+    
+    # Generate AI reviews for Smart Mock data too!
+    ai_reviews = generate_ai_reviews(
+        product_name=query.title(),
+        category='Electronics',
+        rating=avg_rating,
+        price=live_results[0]['price'] if live_results else 50000,
+        platforms=live_results
+    )
             
     return {
         "name": query.title(),
+        "image": main_image,
+        "rating": avg_rating,
+        "reviews_count": 120,
+        "price": live_results[0]['price'] if live_results else 0,
+        "original_price": int(live_results[0]['price'] * 1.2) if live_results else 0,
+        "discount": 20, 
         "image": main_image,
         "rating": avg_rating,
         "reviews_count": 120, 
@@ -315,5 +474,47 @@ def scrape_all(query):
         "price_history": {
              "labels": ["Nov 1", "Nov 15", "Dec 1", "Dec 15", "Jan 1", "Jan 15", "Feb 1"],
              "datasets": graph_datasets
-        }
+        },
+        "ai_reviews": ai_reviews
     }
+
+def get_trending_products():
+    print("DEBUG: Returning Trending Products from Catalog...")
+    products = []
+    # Helper to generate mock history (duplicated here to avoid scope issues or need for refactor)
+    def generate_history(start_price):
+        history = []
+        current = start_price * 1.05 
+        for _ in range(6):
+            current -= random.randint(0, 1000)
+            history.append(int(current))
+        history.append(start_price)
+        return history
+
+    for key, product in PRODUCT_CATALOG.items():
+        p = product.copy()
+        p['id'] = key.replace(" ", "_")
+        
+        # Inject history here too if needed for the listing page (though listing usually doesn't show graph)
+        # But let's be safe if we use this elsewhere
+        if 'price_history' not in p:
+             graph_datasets = []
+             for comp in p.get('price_comparison', []):
+                store_name = comp['store']
+                color = "#FF9900" if "Amazon" in store_name else "#2874F0" if "Flipkart" in store_name else "#00B5B5"
+                bg_color = "rgba(255, 153, 0, 0.1)" if "Amazon" in store_name else "rgba(40, 116, 240, 0.1)" if "Flipkart" in store_name else "rgba(0, 181, 181, 0.1)"
+                
+                graph_datasets.append({
+                    "label": store_name,
+                    "data": generate_history(comp['price']),
+                    "borderColor": color,
+                    "backgroundColor": bg_color,
+                    "tension": 0.4
+                })
+             p['price_history'] = {
+                "labels": ["Nov 1", "Nov 15", "Dec 1", "Dec 15", "Jan 1", "Jan 15", "Feb 1"],
+                "datasets": graph_datasets
+            }
+        
+        products.append(p)
+    return products

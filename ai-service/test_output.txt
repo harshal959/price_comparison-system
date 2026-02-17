@@ -1,0 +1,6 @@
+﻿============================================================
+API Response for 'usb cable'
+============================================================
+
+Product Name: Usb Cable
+Error: 'charmap' codec can't encode character '\u20b9' in position 7: character maps to <undefined>
