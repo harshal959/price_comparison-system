@@ -16,6 +16,42 @@ const categoryConfig = [
     { name: 'Footwear', icon: Footprints, color: 'text-red-500' },
 ];
 
+// Fallback products when AI service is not running
+const fallbackProducts = [
+    // Smartphones
+    { id: 'iphone_15', name: 'Apple iPhone 15 (128 GB) - Black', category: 'Smartphones', image: 'https://m.media-amazon.com/images/I/71657TiFeHL._SX679_.jpg', price: 72999, originalPrice: 79900, discount: 9, rating: 4.6, reviews: 3450, platform: 'Amazon' },
+    { id: 'samsung_s24', name: 'Samsung Galaxy S24 Ultra 5G AI Smartphone', category: 'Smartphones', image: 'https://m.media-amazon.com/images/I/71CXhVhpM0L._SX679_.jpg', price: 128500, originalPrice: 134999, discount: 5, rating: 4.5, reviews: 1250, platform: 'Flipkart' },
+    { id: 'oneplus_12', name: 'OnePlus 12 (Flowy Emerald, 16GB RAM, 512GB)', category: 'Smartphones', image: 'https://m.media-amazon.com/images/I/717Qo4MH97L._SX679_.jpg', price: 69999, originalPrice: 75999, discount: 8, rating: 4.4, reviews: 890, platform: 'Amazon' },
+    { id: 'pixel_8', name: 'Google Pixel 8 (Hazel, 128 GB)', category: 'Smartphones', image: 'https://fdn2.gsmarena.com/vv/bigpic/google-pixel-8.jpg', price: 62999, originalPrice: 75999, discount: 17, rating: 4.3, reviews: 450, platform: 'Flipkart' },
+    { id: 'xiaomi_14_pro', name: 'Xiaomi 14 Pro 5G (Obsidian Black, 12GB)', category: 'Smartphones', image: 'https://fdn2.gsmarena.com/vv/bigpic/xiaomi-14-pro.jpg', price: 54999, originalPrice: 59999, discount: 8, rating: 4.3, reviews: 620, platform: 'Flipkart' },
+    { id: 'vivo_x100_pro', name: 'Vivo X100 Pro 5G (Asteroid Black, 16GB)', category: 'Smartphones', image: 'https://fdn2.gsmarena.com/vv/bigpic/vivo-x100-pro.jpg', price: 89999, originalPrice: 99999, discount: 10, rating: 4.5, reviews: 480, platform: 'Amazon' },
+    { id: 'realme_gt5_pro', name: 'Realme GT 5 Pro 5G (Racing Green, 12GB)', category: 'Smartphones', image: 'https://fdn2.gsmarena.com/vv/bigpic/realme-gt5-pro.jpg', price: 35999, originalPrice: 40999, discount: 12, rating: 4.4, reviews: 720, platform: 'Flipkart' },
+    { id: 'nothing_phone_2', name: 'Nothing Phone (2) 5G (White, 12GB, 256GB)', category: 'Smartphones', image: 'https://fdn2.gsmarena.com/vv/bigpic/nothing-phone2.jpg', price: 34999, originalPrice: 44999, discount: 22, rating: 4.3, reviews: 1100, platform: 'Flipkart' },
+    { id: 'samsung_s23_ultra', name: 'Samsung Galaxy S23 Ultra 5G (Cream, 12GB)', category: 'Smartphones', image: 'https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s23-ultra-5g.jpg', price: 99999, originalPrice: 124999, discount: 20, rating: 4.7, reviews: 5200, platform: 'Amazon' },
+    { id: 'samsung_a55', name: 'Samsung Galaxy A55 5G (Awesome Iceblue, 8GB)', category: 'Smartphones', image: 'https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a55.jpg', price: 27999, originalPrice: 32999, discount: 15, rating: 4.2, reviews: 2100, platform: 'Flipkart' },
+    { id: 'redmi_note_13_pro', name: 'Redmi Note 13 Pro+ 5G (Fusion Purple, 12GB)', category: 'Smartphones', image: 'https://fdn2.gsmarena.com/vv/bigpic/xiaomi-redmi-note-13-pro-plus.jpg', price: 29999, originalPrice: 33999, discount: 12, rating: 4.3, reviews: 3200, platform: 'Amazon' },
+    { id: 'pixel_7a', name: 'Google Pixel 7a (Charcoal, 128 GB)', category: 'Smartphones', image: 'https://fdn2.gsmarena.com/vv/bigpic/google-pixel-7a.jpg', price: 28999, originalPrice: 43999, discount: 34, rating: 4.4, reviews: 2200, platform: 'Flipkart' },
+    { id: 'poco_f6_pro', name: 'POCO F6 Pro 5G (Black, 12GB RAM, 256GB)', category: 'Smartphones', image: 'https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-f6-pro.jpg', price: 31999, originalPrice: 34999, discount: 9, rating: 4.4, reviews: 920, platform: 'Flipkart' },
+    // Laptops
+    { id: 'macbook_air_m2', name: 'Apple MacBook Air M2 13.6-inch, 8GB RAM, 256GB SSD', category: 'Laptops', image: 'https://m.media-amazon.com/images/I/71f5Eu5lJSL._SX679_.jpg', price: 86990, originalPrice: 114900, discount: 24, rating: 4.7, reviews: 1400, platform: 'Flipkart' },
+    { id: 'dell_xps_13', name: 'Dell XPS 13 Plus, Intel Core i7, 16GB, 1TB SSD', category: 'Laptops', image: 'https://i.dell.com/is/image/DellContent/content/dam/ss2/product-images/dell-client-products/notebooks/xps-notebooks/xps-13-9320/media-gallery/copy-of-xs9320nt-cnb-05-bk.psd?fmt=png-alpha&pscan=auto&scl=1&hei=402&wid=555', price: 159990, originalPrice: 199990, discount: 20, rating: 4.2, reviews: 120, platform: 'Flipkart' },
+    { id: 'hp_spectre', name: 'HP Spectre x360 2-in-1 13.5-inch, Intel Evo i7', category: 'Laptops', image: 'https://m.media-amazon.com/images/I/61s7s+4-+5L._SX679_.jpg', price: 134999, originalPrice: 150000, discount: 10, rating: 4.5, reviews: 310, platform: 'Amazon' },
+    // Audio
+    { id: 'sony_headphones', name: 'Sony WH-1000XM5 Wireless Noise Cancelling Headphones', category: 'Audio', image: 'https://m.media-amazon.com/images/I/51SKmu2G9FL._SX679_.jpg', price: 29990, originalPrice: 34990, discount: 14, rating: 4.8, reviews: 8900, platform: 'Amazon' },
+    { id: 'airpods_pro', name: 'Apple AirPods Pro (2nd Gen) with MagSafe Case', category: 'Audio', image: 'https://m.media-amazon.com/images/I/61SUj2aKoEL._SX679_.jpg', price: 22999, originalPrice: 24900, discount: 8, rating: 4.7, reviews: 5600, platform: 'Amazon' },
+    { id: 'jbl_flip_6', name: 'JBL Flip 6 Wireless Portable Bluetooth Speaker', category: 'Audio', image: 'https://m.media-amazon.com/images/I/61+R5r29rQL._SX679_.jpg', price: 9999, originalPrice: 14999, discount: 33, rating: 4.5, reviews: 12000, platform: 'Amazon' },
+    // Watches
+    { id: 'apple_watch_ultra', name: 'Apple Watch Ultra 2 (GPS + Cellular, 49mm) Titanium', category: 'Watches', image: 'https://m.media-amazon.com/images/I/81P5-189VzL._SX679_.jpg', price: 89900, originalPrice: 89900, discount: 0, rating: 4.9, reviews: 890, platform: 'Amazon' },
+    { id: 'samsung_watch_6', name: 'Samsung Galaxy Watch6 Classic LTE (47mm, Black)', category: 'Watches', image: 'https://m.media-amazon.com/images/I/61N+x-jA9UL._SX679_.jpg', price: 36999, originalPrice: 40999, discount: 10, rating: 4.4, reviews: 1500, platform: 'Flipkart' },
+    // Gaming
+    { id: 'playstation_5', name: 'Sony PlayStation 5 Console (Slim)', category: 'Gaming', image: 'https://m.media-amazon.com/images/I/51051FiD9UL._SX679_.jpg', price: 54990, originalPrice: 54990, discount: 0, rating: 4.8, reviews: 5600, platform: 'Amazon' },
+    { id: 'xbox_series_x', name: 'Xbox Series X Console', category: 'Gaming', image: 'https://m.media-amazon.com/images/I/61-jjE67uqL._SX679_.jpg', price: 49990, originalPrice: 54990, discount: 9, rating: 4.7, reviews: 4200, platform: 'Amazon' },
+    // Footwear
+    { id: 'nike_air_jordan', name: "Nike Air Jordan 1 Retro High OG 'Chicago'", category: 'Footwear', image: 'https://m.media-amazon.com/images/I/71zLz6m5Q+L._AC_UY1100_.jpg', price: 16995, originalPrice: 18995, discount: 11, rating: 4.9, reviews: 450, platform: 'Amazon' },
+    { id: 'adidas_ultraboost', name: "Adidas Men's Ultraboost Light Running Shoes", category: 'Footwear', image: 'https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/0fbed4646c1d46e0aae0afc90122d10d_9366/Ultraboost_Light_Running_Shoes_White_HQ6351_01_standard.jpg', price: 11999, originalPrice: 18999, discount: 37, rating: 4.6, reviews: 2100, platform: 'Flipkart' },
+    { id: 'puma_nitro', name: "Puma Deviate Nitro 2 Men's Running Shoes", category: 'Footwear', image: 'https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_600,h_600/global/376807/01/sv01/fnd/IND/fmt/png/Deviate-NITRO-Elite-2-Men\'s-Running-Shoes', price: 13999, originalPrice: 15999, discount: 13, rating: 4.3, reviews: 850, platform: 'Amazon' },
+];
+
 const Products = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [products, setProducts] = useState([]);
@@ -48,7 +84,8 @@ const Products = () => {
                 }));
                 setProducts(transformed);
             } catch (err) {
-                console.error("Failed to fetch products", err);
+                console.error("AI service not available, using fallback products");
+                setProducts(fallbackProducts);
             } finally {
                 setLoading(false);
             }

@@ -116,6 +116,12 @@ const Login = () => {
                         <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
                             Don't have an account? <Link to="/register" className="text-secondary font-bold hover:underline">Create Account</Link>
                         </div>
+
+                        <div className="mt-4 text-center">
+                            <Link to="/" className="inline-flex items-center gap-1 text-sm text-gray-400 dark:text-gray-500 hover:text-primary dark:hover:text-primary transition-colors font-medium">
+                                Skip for now <ArrowRight size={14} />
+                            </Link>
+                        </div>
                     </div>
                 </motion.div>
             </main>
